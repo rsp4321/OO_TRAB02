@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package oo_trab02;
+import view.*;
 
 /**
  *
@@ -16,7 +17,7 @@ public class OO_TRAB02 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        
+        new frmListaRegistros().setVisible(true);
         // Código para subir a interface contendo a tabela para visualizar
     }
     

@@ -1,21 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view;
+import controller.*;
+import model.*;
 
 /**
  *
  * @author rodrigo
  */
 public class frmListaRegistros extends javax.swing.JFrame {
-
+    private TMResultado tabela;
     /**
      * Creates new form frmListaRegistros
      */
     public frmListaRegistros() {
         initComponents();
+        this.tabela = new TMResultado();
+        this.jTable_registros.setModel(tabela);
     }
 
     /**
@@ -80,10 +79,8 @@ public class frmListaRegistros extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
-                
-        // TODO: fazer uma interface para selecionar o arquivo CSV e abrí-lo
-        
-        
+        ListaCSV lista = new ListaCSV(/*data, dados*/);
+        this.tabela.addArquivo(lista);
     }//GEN-LAST:event_btnAbrirActionPerformed
 
     /**
