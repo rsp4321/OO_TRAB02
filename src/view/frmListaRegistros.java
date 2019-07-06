@@ -1,22 +1,65 @@
 package view;
-import controller.*;
-import model.*;
 
+import model.*;
+import controller.*;
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
+import javax.swing.JFrame;
 /**
  *
  * @author rodrigo
  */
 public class frmListaRegistros extends javax.swing.JFrame {
-    private TMResultado tabela;
+    ArrayList<RegistroVazao> tabela;
+    ArrayList<String> resultados;
     /**
-     * Creates new form frmListaRegistros
+     * Creates new form FrPrincipal
      */
     public frmListaRegistros() {
         initComponents();
-        this.tabela = new TMResultado();
-        this.jTable_registros.setModel(tabela);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setVisible(true);
+        tabela = new ArrayList();
+        resultados = new ArrayList();
+        preencheLista();
+        atualizaTabela();
     }
 
+    private void preencheLista() {
+        String linha;
+        FileReader f = null;
+        Scanner ler;
+        try {
+            f = new FileReader("src/vazoes.csv");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(frmListaRegistros.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ler = new Scanner(f);
+        ler.useDelimiter("\n");
+        
+        while(true) {
+            linha = ler.next();
+            if(linha.split(";").length == 34) break;
+        }
+        linha = ler.next(); //Para retirar a impressão do cabeçalho nos campos de valores 
+        tabela.add(new RegistroVazao(linha));
+        
+        while(ler.hasNext()) {
+            linha = ler.next();
+            tabela.add(new RegistroVazao(linha));
+        }
+        
+        try {
+            if(f != null) f.close();
+        } catch (IOException ex) {
+            Logger.getLogger(frmListaRegistros.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }    
+    private void atualizaTabela() {
+        TMResultado tm = new TMResultado(tabela);
+        jTable_resultados.setModel(tm);
+    }    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,24 +69,11 @@ public class frmListaRegistros extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable_registros = new javax.swing.JTable();
         btnAbrir = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable_resultados = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jTable_registros.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable_registros);
 
         btnAbrir.setText("Abrir registro");
         btnAbrir.addActionListener(new java.awt.event.ActionListener() {
@@ -52,35 +82,58 @@ public class frmListaRegistros extends javax.swing.JFrame {
             }
         });
 
+        jTable_resultados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Mês/Ano", "Situação", "% Falhas", "Vazao01", "Vazao02", "Vazao03", "Vazao04", "Vazao05", "Vazao06", "Vazao07", "Vazao08", "Vazao09", "Vazao10", "Vazao11", "Vazao12", "Vazao13", "Vazao14", "Vazao15", "Vazao16", "Vazao17", "Vazao18", "Vazao19", "Vazao20", "Vazao21", "Vazao22", "Vazao23", "Vazao24", "Vazao25", "Vazao26", "Vazao27", "Vazao28", "Vazao29", "Vazao30", "Vazao31"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable_resultados.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        jTable_resultados.setDragEnabled(true);
+        jScrollPane1.setViewportView(jTable_resultados);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 726, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnAbrir)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addComponent(btnAbrir)
+                .addContainerGap(641, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane1)
+                    .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnAbrir)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addContainerGap(477, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(56, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
-        ListaCSV lista = new ListaCSV(/*data, dados*/);
-        this.tabela.addArquivo(lista);
+        //RegistroVazao lista = new RegistroVazao();
     }//GEN-LAST:event_btnAbrirActionPerformed
 
     /**
@@ -121,6 +174,6 @@ public class frmListaRegistros extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAbrir;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable_registros;
+    private javax.swing.JTable jTable_resultados;
     // End of variables declaration//GEN-END:variables
 }

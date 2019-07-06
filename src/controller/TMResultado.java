@@ -6,60 +6,37 @@ import model.*;
 /**
  * @author Arma X
  */
-public class TMResultado extends AbstractTableModel {
-
-    private ArrayList<ListaCSV> linhas;
-    private String[] colunas = {"EstacaoCodigo","NivelConsistencia","Data",
-        "TipoMedicaoChuvas","Maxima","Total","DiaMaxima","NumDiasDeChuva",
-        "MaximaStatus","TotalStatus","NumDiasDeChuvaStatus","TotalAnual",
-        "TotalAnualStatus","Chuva01","Chuva02","Chuva03","Chuva04","Chuva05",
-        "Chuva06","Chuva07","Chuva08","Chuva09","Chuva10","Chuva11","Chuva12",
-        "Chuva13","Chuva14","Chuva15","Chuva16","Chuva17","Chuva18","Chuva19",
-        "Chuva20","Chuva21","Chuva22","Chuva23","Chuva24","Chuva25","Chuva26",
-        "Chuva27","Chuva28","Chuva29","Chuva30","Chuva31"};
+public class TMResultado extends AbstractTableModel { ArrayList<RegistroVazao> lista;
     
-    public TMResultado() {
-        this.linhas = new ArrayList<>();
+    public TMResultado(ArrayList<RegistroVazao> lista) {
+        this.lista = lista;
     }
-
-    public void addArquivo(ListaCSV arquivo) {
-        this.linhas.add(arquivo);
-        fireTableDataChanged();
-    }
-
-    public void deletarArquivo(int rowIndex) {
-        this.linhas.remove(rowIndex);
-        fireTableDataChanged();
-    }
-
-    public ListaCSV getArquivo(int rowIndex) {
-        return this.linhas.get(rowIndex);
-    }
-
+    
     @Override
-    public int getRowCount() {
-        return this.linhas.size();
+    public String getValueAt(int row, int column) {
+        RegistroVazao r = lista.get(row);
+        if(column == 0) return r.getData();
+        if(column == 1) return r.getNivelConsistencia();
+        if(column == 2) return r.getMediaDiaria();
+        if(column > 2 && column <= 34) return r.getVazao(column - 17);
+        return "-";
     }
-
     @Override
     public int getColumnCount() {
-        return colunas.length;
-    }
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        switch (columnIndex) {
-            case 0:
-                //return this.linhas.get(rowIndex).getData();
-            case 1:
-                //return this.linhas.get(rowIndex).getDados();
-            default:
-                return this.linhas.get(rowIndex);
-        }
+        return 34;
     }
     
     @Override
-    public String getColumnName(int columnIndex) {
-        return this.colunas[columnIndex];
+    public String getColumnName(int coluna) {
+        if(coluna == 0) return "Mes/Ano";
+        if(coluna == 1) return "Consistido";
+        if(coluna == 2) return "% Fail";
+        if(coluna > 2 && coluna <= 34) return "Vazao" + Integer.toString(coluna - 16);
+        return "-";
+    }
+    
+    @Override
+    public int getRowCount() {
+        return lista.size();
     }
 }
